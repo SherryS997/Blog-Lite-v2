@@ -50,51 +50,6 @@ for limited data modification purposes.
 
 -   **Git:** responsible for version control
 
-## Database Schema:
-
-The database has four tables and the schema is as follows:
-
-+----------------------------------+-----------------------------------+
-| **User Table**                   | **Post Table**                    |
-+==================================+===================================+
-| -   **Roll** (Integer): Primary  | -   **Roll** (Integer): Primary   |
-|     Key, Auto Increment          |     Key, Auto Increment           |
-|                                  |                                   |
-| -   **Username** (String):       | -   **Author** (String): Foreign  |
-|     Unique, Not Null             |     Key (User.roll), Not Null     |
-|                                  |                                   |
-| -   **Email** (String): Unique,  | -   **Img** (String): Not Null    |
-|     Not Null                     |                                   |
-|                                  | -   **Text** (String): Not Null   |
-| -   **Password** (String):       |                                   |
-|     Unique, Not Null             | -   **Date** (String): Not Null   |
-|                                  |                                   |
-| -   **Img** (String): Not Null,  | -   **Title** (String): Not Null  |
-|     Default 0                    |                                   |
-|                                  | -   **Views** (Integer): Not      |
-| -   **PDF** (Integer): Not Null, |     Null, Default 0               |
-|     Default 0                    |                                   |
-|                                  | -   **Likes** (Integer): Not      |
-|                                  |     Null, Default 0               |
-+----------------------------------+-----------------------------------+
-
-+----------------------------------+-----------------------------------+
-| **Comment Table**                | **Follow Table**                  |
-+==================================+===================================+
-| -   **Roll** (Integer): Primary  | -   **Roll** (Integer): Primary   |
-|     > Key, Auto Increment        |     > Key, Auto Increment         |
-|                                  |                                   |
-| -   **Post** (Integer): Foreign  | -   **Following** (Integer):      |
-|     > Key (Post.roll), Not Null  |     > Foreign Key                 |
-|                                  |     > (User.username), Not Null   |
-| -   **Author** (String): Foreign |                                   |
-|     > Key (User.username), Not   | -   **Follower** (String):        |
-|     > Null                       |     > Foreign Key                 |
-|                                  |     > (User.username), Not Null   |
-| -   **Comment** (String): Not    |                                   |
-|     > Null                       |                                   |
-+----------------------------------+-----------------------------------+
-
 ## API Design:
 
 The Flask-Restful library for Python was used to create a RESTful API
@@ -159,22 +114,23 @@ The features of the application are as follows:
 ## Video:
 
 For the video, click
-[[here]{.underline}](https://drive.google.com/file/d/1m0fumBfuETH1ZQDZ2E0Zuaw2iBo1-d8x/view?usp=sharing)!
+[here](https://drive.google.com/file/d/1m0fumBfuETH1ZQDZ2E0Zuaw2iBo1-d8x/view?usp=sharing)!
 
 ## Instructions for running the application
 
-1. Navigate to the root folder of the application.
-2. Open two separate terminals and execute the following commands in each:
+1. Clone the repo.q
+2. Navigate to the root folder of the application.
+3. Open two separate terminals and execute the following commands in each:
 
     * `redis-server`
     * `mailhog`
-3. Navigate to the backend folder and open three separate terminals. Execute the following commands in each:
+4. Navigate to the backend folder and open three separate terminals. Execute the following commands in each:
 
     * `python main.py`
     * `celery -A main.celery worker -l info`
     * `celery -A main.celery beat --max-interval 1 -l info`
-4. Navigate to the frontend folder.
-5. In the terminal, execute the following command:
+5. Navigate to the frontend folder.
+6. In the terminal, execute the following command:
 
     * `serve -s dist`
 
