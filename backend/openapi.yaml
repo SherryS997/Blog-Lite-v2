@@ -1,0 +1,907 @@
+openapi: 3.0.0
+info:
+  title: Blog Lite v2 API
+  description: >
+    <div>API created for Blog-Lite using Flask-Restful in OpenAPI standards.
+    <br>
+    To receive your token, head on to your profile page in the webpage and click on "API Token".
+    </div>
+
+    <h3> User Table Schema </h3> 
+    <table>
+      <thead>
+        <th>Column Name</th>
+        <th>Column Type</th>
+        <th>Constraints</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td>roll</td>
+        <td>Integer</td>
+        <td>Primary Key, Auto Increment</td>
+      </tr>
+      <tr>
+        <td>username</td>
+        <td>String</td>
+        <td>Unique, Not Null</td>
+      </tr>
+      <tr>
+        <td>email</td>
+        <td>String</td>
+        <td>Unique, Not Null</td>
+      </tr>
+      <tr>
+        <td>password</td>
+        <td>String</td>
+        <td>Unique, Not Null</td>
+      </tr>      
+      <tr>
+        <td>img</td>
+        <td>String</td>
+        <td>Not Null, Default 0</td>
+      </tr>  
+      <tr>
+        <td>pdf</td>
+        <td>Integer</td>
+        <td>Not Null, Default 0</td>
+      </tr>         
+    </tbody>
+    </table>
+
+    <h3> Post Table Schema </h3> 
+    <table>
+      <thead>
+        <th>Column Name</th>
+        <th>Column Type</th>
+        <th>Constraints</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td>roll</td>
+        <td>Integer</td>
+        <td>Primary Key, Auto Increment</td>
+      </tr>
+      <tr>
+        <td>author</td>
+        <td>String</td>
+        <td>Foreign Key (User.roll), Not Null</td>
+      </tr>
+      <tr>
+        <td>img</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>      
+      <tr>
+        <td>text</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>       
+      <tr>
+        <td>date</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>      
+      <tr>
+        <td>title</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>
+      <tr>
+        <td>views</td>
+        <td>Integer</td>
+        <td>Not Null</td>
+      </tr>    
+      <tr>
+        <td>likes</td>
+        <td>Integer</td>
+        <td>Not Null</td>
+      </tr>     
+    </tbody>
+    </table>
+
+
+    <h3> Follow Table Schema </h3> 
+    <table>
+      <thead>
+        <th>Column Name</th>
+        <th>Column Type</th>
+        <th>Constraints</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td>roll</td>
+        <td>Integer</td>
+        <td>Primary Key, Auto Increment</td>
+      </tr>
+      <tr>
+        <td>following</td>
+        <td>Integer</td>
+        <td>Foreign Key (User.roll), Not Null</td>
+      </tr>
+      <tr>
+        <td>follower</td>
+        <td>Integer</td>
+        <td>Foreign Key (User.roll), Not Null</td>
+      </tr>
+    </tbody>
+    </table>
+
+
+    <h3> Comment Table Schema </h3> 
+    <table>
+      <thead>
+        <th>Column Name</th>
+        <th>Column Type</th>
+        <th>Constraints</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td>roll</td>
+        <td>Integer</td>
+        <td>Primary Key, Auto Increment</td>
+      </tr>
+      <tr>
+        <td>post</td>
+        <td>Integer</td>
+        <td>Foreign Key (Post.roll), Not Null</td>
+      </tr>
+      <tr>
+        <td>author</td>
+        <td>String</td>
+        <td>Foreign Key (User.username), Not Null</td>
+      </tr>
+      <tr>
+        <td>comment</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>
+    </tbody>
+    </table>
+
+    <h3> Error Codes </h3> 
+    <table>
+      <thead>
+        <th>Resource</th>
+        <th>Error Code</th>
+        <th>Message</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td>User</td>
+        <td>USER001</td>
+        <td>Invalid file type</td>
+      </tr>
+      <tr>
+        <td>User</td>
+        <td>USER002</td>
+        <td>Password should be atleast 4 characters long</td>
+      </tr>
+       <tr>
+        <td>User</td>
+        <td>USER003</td>
+        <td>New Username is required</td>
+      </tr>
+      <tr>
+        <td>Post</td>
+        <td>POST001</td>
+        <td>Invalid file type</td>
+      </tr>
+      <tr>
+        <td>Comment</td>
+        <td>COMMENT001</td>
+        <td>Invalid Username</td>
+      </tr> 
+      <tr>
+        <td>Comment</td>
+        <td>COMMENT002</td>
+        <td>No Comment Provided</td>
+      </tr> 
+    </tbody>
+    </table>
+
+  version: 1.0.0
+servers:
+  - url: http://localhost:2345/
+paths:
+  /api/user/{username}:
+    description: End point to read, update and delete a user resource.
+    get:
+      description: Operation to Read user resource.
+      tags:
+        - "User"
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: User
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: user object
+                type: object
+                properties:
+                  roll:
+                    type: integer
+                    example: 1
+                  username:
+                    type: string
+                    example: User
+                  email:
+                    type: string
+                    example: user@domain.com
+                  img:
+                    type: string
+                    example: 1
+                  posted:
+                    type: integer
+                    example: 1
+                  pdf:
+                    type: integer
+                    example: 1
+        '500':
+          description: Internal Server Error
+        '404':
+          description: User not found
+  /api/user:
+    description: End point to create user resource
+    put:
+      description: Operation to update the user resource.
+      tags:
+        - "User"
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                New Username:
+                  type: string
+                New Password:
+                  type: string
+                  format: password
+                New Email:
+                  type: string
+                  format: email
+                New Format:
+                  type: string
+                  enum:
+                    - HTML
+                    - PDF
+                New Image:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Successfuly updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roll:
+                    type: integer
+                    example: 1
+                  username:
+                    type: string
+                    example: User
+                  email:
+                    type: string
+                    example: user@domain.com
+                  img:
+                    type: string
+                    example: 1
+                  posted:
+                    type: integer
+                    example: 1
+                  pdf:
+                    type: integer
+                    example: 1
+        '404':
+          description: User not found
+        '401':
+          description: Unauthorized action
+        '500':
+          description: Internal Server Error
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+    delete:
+      description: Operation to delete the user resource
+      tags:
+        - "User"
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully Deleted
+        '401':
+          description: Unauthorized action
+        '404':
+          description: User not found
+        '500':
+          description: Intenal Server Error
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+    post:
+      description: Operation to create the user resource
+      tags:
+        - "User"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                Username:
+                  type: string
+                Password:
+                  type: string
+                  format: password
+                Email:
+                  type: string
+                  format: email
+                Image:
+                  type: string
+                  format: binary
+              required:
+                - Username
+                - Password
+                - Email
+      responses:
+        '200':
+          description: Successfuly updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roll:
+                    type: integer
+                    example: 1
+                  username:
+                    type: string
+                    example: User
+                  email:
+                    type: string
+                    example: user@domain.com
+                  img:
+                    type: string
+                    example: 1
+                  posted:
+                    type: integer
+                    example: 1
+                  pdf:
+                    type: integer
+                    example: 1
+        '409':
+          description: username already exist
+        '500':
+          description: Internal Server Error
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+  /api/post/id/{post_id}:
+    description: Url to read, update and delete the post resource.
+    get:
+      description: Operation to read post resource
+      tags:
+        - "Post"
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: post object
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: Title
+                  text:
+                    type: string
+                    example: text
+                  author:
+                    type: string
+                    example: author
+                  date:
+                    type: string
+                    example: 22-09-02
+                  img:
+                    type: string
+                    example: 1
+                  views:
+                    type: integer
+                    example: 1
+                  likes:
+                    type: integer
+                    example: 1
+        '500':
+          description: Internal server error
+        '404':
+          description: Post not found
+    put:
+      description: Operation to update the post resource
+      tags:
+        - "Post"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                Title:
+                  type: string
+                Text:
+                  type: string
+                  format: base64
+                New Image:
+                  type: string
+                  format: binary
+            encoding:
+              Text:
+                contentType: text/plain
+              New Image:
+                contentType: image/png, image/jpg
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: Title
+                  text:
+                    type: string
+                    example: text
+                  author:
+                    type: string
+                    example: author
+                  date:
+                    type: string
+                    example: 22-09-02
+                  img:
+                    type: string
+                    example: 1
+        '404':
+          description: Post not found
+        '401':
+          description: Unauthorized action
+        '500':
+          description: Internal Server Error
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+    delete:
+      description: Operation to delete the post resource
+      tags:
+        - "Post"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+            example: 101
+      responses:
+        '200':
+          description: Successfully Deleted
+        '500':
+          description: Internal Server Error
+        '404':
+          description: Post not found
+        '401':
+          description: Unauthorized action
+  /api/post:
+    description: Url to create post resource
+    post:
+      description: Operation to create the post resource
+      tags:
+        - "Post"
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                Title:
+                  type: string
+                Text:
+                  type: string
+                  format: base64
+                Image:
+                  type: string
+                  format: binary
+              required:
+                - Title
+                - Text
+                - Image
+            encoding:
+              Text:
+                contentType: text/txt
+              Image:
+                contentType: image/png, image/jpg
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: Title
+                  text:
+                    type: string
+                    example: text
+                  author:
+                    type: string
+                    example: author
+                  date:
+                    type: string
+                    example: 22-09-02
+                  img:
+                    type: string
+                    example: 1
+        '500':
+          description: Internal Server Error
+        '401':
+          description: Unauthorized action
+        '404':
+          description: User not found
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+  /api/post/user/{username}:
+    description: Url to read, update and delete the post resource.
+    get:
+      description: Operation to get posts written by a user
+      tags:
+        - "Post"
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: "user"
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: post object
+                type: array
+                items:
+                  properties:
+                    title:
+                      type: string
+                      example: Title
+                    text:
+                      type: string
+                      example: text
+                    author:
+                      type: string
+                      example: author
+                    date:
+                      type: string
+                      example: 22-09-02
+                    img:
+                      type: string
+                      example: 1
+                    views:
+                      type: integer
+                      example: 1
+        '500':
+          description: Internal server error
+        '404':
+          description: User not found
+
+  /api/post/{post_id}/comment:
+    description: URL to get the the list of comments on a post and create comments for a post.
+    get:
+      description: URL to get the the list of comments on a post.
+      tags:
+        - "Comment"
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+            example: 101
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    author:
+                      type: string
+                      example: User1
+                    post:
+                      type: integer
+                      example: 1
+                    comment:
+                      type: string
+                      example: hello
+        '404':
+          description: Post not found
+        '500':
+          description: Internal Server Error
+
+    post:
+      description: Add comments to a post.
+      tags:
+        - "Comment"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+            example: 101
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Comment:
+                  type: string
+      responses:
+        '201':
+          description: Comment Posted
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    author:
+                      type: string
+                      example: User1
+                    post:
+                      type: integer
+                      example: 1
+                    comment:
+                      type: string
+                      example: hello
+        '404':
+          description: Post not found
+        '401':
+          description: Unauthorized action
+        '500':
+          description: Internal Server Error
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+          
+  /api/user/{username}/follows:
+    description: URL to get the the list of follows of a user,
+    get:
+      description: URL to get the the list of follows of a user.
+      tags:
+        - "Follows"
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: User
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    following:
+                      type: integer
+                      example: 2
+                    follower:
+                      type: integer
+                      example: 1
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error          
+    post:
+      description: Follow another user.
+      tags:
+        - "Follows"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: User
+      responses:
+        '200':
+          description: Successfully Followed
+        '404':
+          description: User not found
+        '401':
+          description: Unauthorized action
+        '500':
+          description: Internal Server Error
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '409':
+          description: Follow already exist
+          
+    delete:
+      description: Delete a follow.
+      tags:
+        - "Follows"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: User
+      responses:
+        '200':
+          description: Successfully Deleted
+        '404':
+          description: User not found
+        '401':
+          description: Unauthorized action
+        '500':
+          description: Internal Server Error
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '409':
+          description: Follow already exist
+          
+  /api/user/{username}/followers:
+    description: URL to get the the list of followers of a user.
+    get:
+      description: URL to get the the list of followers of a user.
+      tags:
+        - "Followers"
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: User
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    following:
+                      type: integer
+                      example: 2
+                    follower:
+                      type: integer
+                      example: 1
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

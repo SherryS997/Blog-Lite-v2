@@ -1,0 +1,519 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Report</title>
+    <meta name="description" content="Report example">
+    <style type="text/css">
+      @font-face {
+        font-family: Fira Sans;
+        font-weight: 400;
+        src: url(../static/report/firasans-regular.otf);
+      }
+      @font-face {
+        font-family: Fira Sans;
+        font-style: italic;
+        font-weight: 400;
+        src: url(../static/report/firasans-italic.otf);
+      }
+      @font-face {
+        font-family: Fira Sans;
+        font-weight: 300;
+        src: url(../static/report/firasans-light.otf);
+      }
+      @font-face {
+        font-family: Fira Sans;
+        font-style: italic;
+        font-weight: 300;
+        src: url(../static/report/firasans-lightitalic.otf);
+      }
+      @font-face {
+        font-family: Fira Sans;
+        font-weight: 700;
+        src: url(../static/report/firasans-bold.otf);
+      }
+
+      @page {
+        @top-left {
+          background: #fbc847;
+          content: counter(page);
+          height: 1cm;
+          text-align: center;
+          width: 1cm;
+        }
+        @top-center {
+          background: #fbc847;
+          content: '';
+          display: block;
+          height: .05cm;
+          opacity: .5;
+          width: 100%;
+        }
+        @top-right {
+          content: string(heading);
+          font-size: 9pt;
+          height: 1cm;
+          vertical-align: middle;
+          width: 100%;
+        }
+      }
+      @page :blank {
+        @top-left { background: none; content: '' }
+        @top-center { content: none }
+        @top-right { content: none }
+      }
+      @page no-chapter {
+        @top-left { background: none; content: none }
+        @top-center { content: none }
+        @top-right { content: none }
+      }
+      @page :first {
+        background: url(../static/report/report-cover.jpg) no-repeat center;
+        background-size: cover;
+        margin: 0;
+      }
+      @page chapter {
+        background: #fbc847;
+        margin: 0;
+        @top-left { content: none }
+        @top-center { content: none }
+        @top-right { content: none }
+      }
+
+      html {
+        color: #393939;
+        font-family: Fira Sans;
+        font-size: 11pt;
+        font-weight: 300;
+        line-height: 1.5;
+      }
+
+      h1 {
+        color: #fbc847;
+        font-size: 38pt;
+        margin: 5cm 2cm 0 2cm;
+        page: no-chapter;
+        width: 100%;
+      }
+      h2, h3, h4 {
+        color: black;
+        font-weight: 400;
+      }
+      h2 {
+        break-before: always;
+        font-size: 28pt;
+      }
+      h3 {
+        font-weight: 300;
+        font-size: 15pt;
+      }
+      h4 {
+        font-size: 13pt;
+      }
+
+      #cover {
+        align-content: space-between;
+        display: flex;
+        flex-wrap: wrap;
+        height: 297mm;
+      }
+      #cover address {
+        background: #fbc847;
+        flex: 1 50%;
+        margin: 0 -2cm;
+        padding: 1cm 0;
+        white-space: pre-wrap;
+      }
+      #cover address:first-of-type {
+        padding-left: 3cm;
+      }
+      #contents {
+        break-before: right;
+        break-after: left;
+        page: no-chapter;
+      }
+      #contents h2 {
+        font-size: 20pt;
+        font-weight: 400;
+        margin-bottom: 3cm;
+      }
+      #contents h3 {
+        font-weight: 500;
+        margin: 3em 0 1em;
+      }
+      #contents h3::before {
+        background: #fbc847;
+        content: '';
+        display: block;
+        height: .08cm;
+        margin-bottom: .25cm;
+        width: 2cm;
+      }
+      #contents ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      #contents ul li {
+        border-top: .25pt solid #c1c1c1;
+        margin: .25cm 0;
+        padding-top: .25cm;
+      }
+      #contents ul li::before {
+        color: #fbc847;
+        content: '• ';
+        font-size: 40pt;
+        line-height: 16pt;
+        vertical-align: bottom;
+      }
+      #contents ul li a {
+        color: inherit;
+        text-decoration-line: inherit;
+      }
+      #contents ul li a::before {
+        content: target-text(attr(href));
+      }
+      #contents ul li a::after {
+        color: #fbc847;
+        content: target-counter(attr(href), page);
+        float: right;
+      }
+
+      #columns section {
+        columns: 2;
+        column-gap: 1cm;
+        padding-top: 1cm;
+      }
+      #columns section p {
+        text-align: justify;
+      }
+      #columns section p:first-of-type {
+        font-weight: 700;
+      }
+
+      #skills h3 {
+        background: #fbc847;
+        margin: 0 -3cm 1cm;
+        padding: 1cm 1cm 1cm 3cm;
+        width: 21cm;
+      }
+      #skills section {
+        padding: .5cm 0;
+      }
+      #skills section#table-content::before {
+        background: url(../static/report/table-content.svg) no-repeat center #fbc847;
+        background-size: 50%;
+        content: '';
+        display: inline-block;
+        float: left;
+        height: 2cm;
+        margin-right: .5cm;
+        vertical-align: middle;
+        width: 2cm;
+      }
+      #skills section#heading::before {
+        background: url(../static/report/heading.svg) no-repeat center #fbc847;
+        background-size: 50%;
+        content: '';
+        display: inline-block;
+        float: left;
+        height: 2cm;
+        margin-right: .5cm;
+        vertical-align: middle;
+        width: 2cm;
+      }
+      #skills section#multi-columns::before {
+        background: url(../static/report/multi-columns.svg) no-repeat center #fbc847;
+        background-size: 50%;
+        content: '';
+        display: inline-block;
+        float: left;
+        height: 2cm;
+        margin-right: .5cm;
+        vertical-align: middle;
+        width: 2cm;
+      }
+      #skills section#internal-links::before {
+        background: url(../static/report/internal-links.svg) no-repeat center #fbc847;
+        background-size: 50%;
+        content: '';
+        display: inline-block;
+        float: left;
+        height: 2cm;
+        margin-right: .5cm;
+        vertical-align: middle;
+        width: 2cm;
+      }
+      #skills section#style::before {
+        background: url(../static/report/style.svg) no-repeat center #fbc847;
+        background-size: 50%;
+        content: '';
+        display: inline-block;
+        float: left;
+        height: 2cm;
+        margin-right: .5cm;
+        vertical-align: middle;
+        width: 2cm;
+      }
+      #skills section h4 {
+        margin: 0;
+      }
+      #skills section p {
+        margin-top: 0;
+      }
+
+      #offers {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      #offers h2, #offers h3 {
+        width: 100%;
+      }
+      #offers section {
+        width: 30%;
+      }
+      #offers section h4 {
+        margin-bottom: 0;
+      }
+      #offers section ul {
+        list-style: none;
+        margin: 0;
+        padding-left: 0;
+      }
+      #offers section ul li:not(:last-of-type) {
+        margin: .5cm 0;
+      }
+      #offers section p {
+        background: #fbc847;
+        display: block;
+        font-size: 15pt;
+        font-weight: 700;
+        margin-bottom: 0;
+        padding: .25cm 0;
+        text-align: center;
+      }
+
+      #chapter {
+        align-items: center;
+        display: flex;
+        height: 297mm;
+        justify-content: center;
+        page: chapter;
+      }
+
+      #typography section {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 1cm 0;
+      }
+      #typography section h4 {
+        border-top: 1pt solid;
+        flex: 1 25%;
+        margin: 0;
+      }
+      #typography section h4 + * {
+        flex: 1 75%;
+        margin: 0;
+        padding-left: .5cm;
+      }
+      #typography section p {
+        text-align: justify;
+      }
+      #typography section ul {
+        line-height: 2;
+        list-style: none;
+      }
+      #typography section#small-caps p {
+        font-variant: small-caps;
+      }
+      #typography section#ligatures dl {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      #typography section#ligatures dl dt {
+        font-weight: 400;
+        width: 30%;
+      }
+      #typography section#ligatures dl dd {
+        flex: 1 70%;
+        margin: 0;
+        padding: 0;
+      }
+      #typography section#ligatures .none {
+        font-variant-ligatures: none;
+      }
+      #typography section#ligatures .common {
+        font-variant-ligatures: common-ligatures;
+      }
+      #typography section#ligatures .discretionary {
+        font-variant-ligatures: discretionary-ligatures;
+      }
+      #typography section#ligatures .contextual {
+        font-variant-ligatures: contextual;
+      }
+      #typography section#numbers dl {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      #typography section#numbers dl dt {
+        font-weight: 400;
+        width: 30%;
+      }
+      #typography section#numbers dl dd {
+        flex: 1 70%;
+        margin: 0;
+        padding: 0;
+      }
+      #typography section#numbers #fractions {
+        font-variant-numeric: diagonal-fractions;
+      }
+      #typography section#numbers #ordinals {
+        font-variant-numeric: ordinal;
+      }
+      #typography section#numbers #slashed {
+        font-variant-numeric: slashed-zero;
+      }
+      #typography section#numbers #super {
+        font-variant-position: super;
+      }
+      #typography section#numbers #sub {
+        font-variant-position: sub;
+      }
+      #typography section#figures dl {
+        columns: 4;
+      }
+      #typography section#figures dl dt {
+        font-weight: 400;
+      }
+      #typography section#figures dl dd {
+        display: flex;
+        margin: 0;
+        padding: 0;
+      }
+      #typography section#figures dl dd ul {
+        padding: 0 1em 0 0;
+      }
+      #typography section#figures #oldstyle {
+        font-variant-numeric: oldstyle-nums;
+      }
+      #typography section#figures #tabular {
+        font-variant-numeric: tabular-nums;
+      }
+      #typography section#figures #old-tabular {
+        font-variant-numeric: oldstyle-nums tabular-nums;
+      }
+    </style>
+  </head>
+
+  <body>
+    <article id="cover">
+      <h1>Monthly Blog-Lite Report</h1>
+      <address>
+        Visit us at:
+        https://blog-lite.com
+      </address>
+    </article>
+
+    {% if (state) %}
+    <article id="columns">
+      <h2 id="columns-title">{{ data.user.username }}'s Posts' Views</</h2>
+      <img src="../static/img/Analytics/{{ data.user.username }}/Views.png" alt="" style="max-width: 100%; height: auto">
+    </article>
+    <article id="typography">
+      <section id="figures">
+        <h4>Figures</h4>
+        <dl>
+        <dt>Title</dt>
+        <dd>
+          <ul id="oldstyle" style="width: 400px;">
+            {% for post in data.posts %}
+            {% if ((post[0]|length) > 12) %}
+            <li>{{ post[0][:12] }}...</li>
+            {% else %}
+            <li>{{ post[0] }}</li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </dd>
+        <dt>Views</dt>
+        <dd>
+          <ul id="tabular">
+            {% for post in data.posts %}
+            <li>{{ post[1] }}</li>
+            {% endfor %}
+          </ul>
+        </dd>
+      </dl>
+      </section>
+    </article>
+    <article>
+      <h2 id="columns-title">{{ data.user.username }}'s Posts' Likes</</h2>
+      <img src="../static/img/Analytics/{{ data.user.username }}/Likes.png" alt="" style="max-width: 100%; height: auto">
+    </article>
+    <article id="typography">
+      <section id="figures">
+        <h4>Figures</h4>
+        <dl>
+        <dt>Title</dt>
+        <dd>
+          <ul id="oldstyle" style="width: 400px;">
+            {% for post in data.posts %}
+            {% if ((post[0]|length) > 12) %}
+            <li>{{ post[0][:12] }}...</li>
+            {% else %}
+            <li>{{ post[0] }}</li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </dd>
+        <dt>Likes</dt>
+        <dd>
+          <ul id="tabular">
+            {% for post in data.posts %}
+            <li>{{ post[2] }}</li>
+            {% endfor %}
+          </ul>
+        </dd>
+      </dl>
+      </section>
+    </article>
+    <article>
+      <h2 id="columns-title">{{ data.user.username }}'s Posts' Comments</</h2>
+      <img src="../static/img/Analytics/{{ data.user.username }}/Comments.png" alt="" style="max-width: 100%; height: auto">
+    </article>
+    <article id="typography">
+      <section id="figures">
+        <h4>Figures</h4>
+        <dl>
+        <dt>Title</dt>
+        <dd>
+          <ul id="oldstyle" style="width: 400px;">
+            {% for post in data.posts %}
+            {% if ((post[0]|length) > 12) %}
+            <li>{{ post[0][:12] }}...</li>
+            {% else %}
+            <li>{{ post[0] }}</li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </dd>
+        <dt>Comments</dt>
+        <dd>
+          <ul id="tabular">
+            {% for post in data.posts %}
+            <li>{{ post[2] }}</li>
+            {% endfor %}
+          </ul>
+        </dd>
+      </dl>
+      </section>
+    </article>
+    {% else %}      
+    <article id="columns">
+      <h2 id="columns-title">Your Monthly Report is empty</h2>
+
+      <h3>There are no posts to report on.</h3>
+    </article>
+    {% endif %}
+
+  </body>
+</html>
