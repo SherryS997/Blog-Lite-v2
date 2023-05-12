@@ -118,7 +118,7 @@ For the video, click
 
 ## Instructions for running the application
 
-1. Clone the repo.q
+1. Clone the repo.
 2. Navigate to the root folder of the application.
 3. Open two separate terminals and execute the following commands in each:
 
