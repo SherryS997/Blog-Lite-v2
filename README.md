@@ -114,7 +114,7 @@ The features of the application are as follows:
 ## Video:
 
 For the video, click
-[here](https://drive.google.com/file/d/1m0fumBfuETH1ZQDZ2E0Zuaw2iBo1-d8x/view?usp=sharing)!
+[here](https://youtu.be/h8Gj-RqDZys)!
 
 ## Instructions for running the application
 
